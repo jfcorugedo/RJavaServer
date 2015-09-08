@@ -15,7 +15,7 @@ Once these steps are done, you have to configure some variables inside your loca
 
 To sum up, look at the content of the script $R_HOME/library/rJava/jri/run and configure your local system usign the same variable names and values.
 
-More over, the server must be started with the JVM parameter -D-Djava.library.path pointing at the JRI installation directory (Ej: -Djava.library.path=/app/vendor/R/lib/R/library/rJava/jri/).
+Moreover, the server must be started with the JVM parameter -D-Djava.library.path pointing at the JRI installation directory (Ej: -Djava.library.path=/app/vendor/R/lib/R/library/rJava/jri/).
 
 If you have trouble finding this directory, try to look for the JRI SO library: 
 
