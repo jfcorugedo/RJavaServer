@@ -1,0 +1,5 @@
+endpoints:
+  shutdown: enabled=true
+  beans: sensitive:false
+server:
+    port: 8080
