@@ -81,7 +81,7 @@ public class UseREngineInFrontOfJRIEngineTest {
 		engine = REngine.engineForClass("org.rosuda.REngine.JRI.JRIEngine", new String[] { "--no-save" }, null, false);
 		System.out.println("Rengine created...");
 		
-		REXP result = engine.parseAndEval("source(\"/Users/jfcorugedo/Documents/git/kmd/kmdr/blockFunction.R\")");
+		REXP result = engine.parseAndEval("source(\"/Users/jfcorugedo/Documents/git/RJavaServer/src/test/resources/blockFunction.R\")");
 		if(result == null) {
 			LOG.error("blockFunction is not loaded!");
 		} else {

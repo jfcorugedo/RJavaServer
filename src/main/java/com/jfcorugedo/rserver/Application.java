@@ -26,7 +26,7 @@ public class Application {
 	private RService rService;
 	
 	public static void main(String[] args) {
-        LOG.debug("\n*************\n* rJava POC *\n*************\n");
+        LOG.debug("\n****************\n* rJava Server *\n****************\n");
         
         SpringApplication app = new SpringApplication(Application.class);
         app.setShowBanner(false);
