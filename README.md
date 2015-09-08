@@ -21,3 +21,25 @@ If you have trouble finding this directory, try to look for the JRI SO library:
 
 find / -name "libjri.*"
 
+## Usage
+
+Right now, the REST API has only very basic operations, but you can extend it to call whatever R function you want. Moreover, you can create your own R script and load it using `engine.parseAndEval("source(\"/yourpath/yourscript.r\"")`. (See an example at UseREngineInFrontOfJRIEngineTest)
+
+To test the server, just try to execute a POST command over the `mean` resource.
+
+Curl example: 
+
+`curl http://localhost:8080/mean -X POST -d "[1,2,3,4,5,6,7,8,9.345]" -H "Content-type: application/json" -i``
+
+It should return:
+
+    HTTP/1.1 200 OK
+    Server: Apache-Coyote/1.1
+    X-Application-Context: application:8080
+    Content-Type: application/json;charset=UTF-8
+    Transfer-Encoding: chunked
+    Date: Tue, 08 Sep 2015 15:50:20 GMT
+    
+    5.038333333333333
+    
+    
