@@ -10,6 +10,7 @@ import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REngine;
+import org.rosuda.REngine.REngineStdOutput;
 import org.rosuda.REngine.RList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +79,7 @@ public class UseREngineInFrontOfJRIEngineTest {
 		// 2) we won't use the main loop at first, we'll start it later
 		// (that's the "false" as second argument)
 		// 3) no callback class will be used
-		engine = REngine.engineForClass("org.rosuda.REngine.JRI.JRIEngine", new String[] { "--no-save" }, null, false);
+		engine = REngine.engineForClass("org.rosuda.REngine.JRI.JRIEngine", new String[] { "--no-save" }, new REngineStdOutput(), false);
 		System.out.println("Rengine created...");
 		
 		REXP result = engine.parseAndEval("source(\"/Users/jfcorugedo/Documents/git/RJavaServer/src/test/resources/blockFunction.R\")");
