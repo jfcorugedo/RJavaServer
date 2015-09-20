@@ -1,4 +1,4 @@
-package es.test.juan.rjava;
+package com.jfcorugedo.sample.rjava;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -22,6 +22,7 @@ import org.rosuda.JRI.Rengine;
  * @author jfcorugedo
  *
  */
+@Ignore("Maven can't execute this tests because they require a R environmet installed")
 public class SimpleArithmeticCalculationsTest {
 
 	private static Rengine engine = null;
@@ -52,7 +53,6 @@ public class SimpleArithmeticCalculationsTest {
 	}
 	
 	@Test
-	@Ignore("Infinitest can't execute this test because it needs R_HOME and jri library ")
 	public void testMean() throws Exception{
 
 		
@@ -67,7 +67,6 @@ public class SimpleArithmeticCalculationsTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testSqrt() {
 		REXP result = engine.eval("sqrt(36)");
 		assertThat(result.asDouble()).isEqualTo(6.0);

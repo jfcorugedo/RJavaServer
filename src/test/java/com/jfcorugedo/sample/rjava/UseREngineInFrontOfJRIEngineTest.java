@@ -1,4 +1,4 @@
-package es.test.juan.rjava;
+package com.jfcorugedo.sample.rjava;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -15,6 +15,7 @@ import org.rosuda.REngine.RList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Ignore("Maven can't execute this tests because they require a R environmet installed")
 public class UseREngineInFrontOfJRIEngineTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UseREngineInFrontOfJRIEngineTest.class);
@@ -22,7 +23,6 @@ public class UseREngineInFrontOfJRIEngineTest {
 	private static REngine engine;
 	
 	@Test
-	@Ignore
 	public void testAssignDataFrame() throws Exception{
 		REXPDouble rIds = new REXPDouble(new double[]{1d,2d});
 		REXPDouble rValues = new REXPDouble(new double[]{10000d,20000d});
@@ -42,7 +42,6 @@ public class UseREngineInFrontOfJRIEngineTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testMean() throws Exception{
 
 		
@@ -57,7 +56,6 @@ public class UseREngineInFrontOfJRIEngineTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testSqrt() throws Exception{
 		REXP result = engine.parseAndEval("sqrt(36)");
 		assertThat(result.asDouble()).isEqualTo(6.0);
