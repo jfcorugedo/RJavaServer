@@ -18,7 +18,6 @@ import com.jfcorugedo.rserver.exception.BadRequestException;
 
 
 @RestController
-@RequestMapping("stratification")
 public class RController {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(RController.class);
@@ -26,7 +25,7 @@ public class RController {
 	@Inject
 	private RService rService;
 	
-	@RequestMapping(value="/continuous/group", method=POST)
+	@RequestMapping(value="/stratification/continuous/group", method=POST)
 	public ResponseEntity<List<int[]>> block(@RequestBody(required=false) double[] data) {
 		if(data != null) {
 			return new ResponseEntity<List<int[]>>(rService.groupValues(data), HttpStatus.CREATED);
@@ -35,7 +34,7 @@ public class RController {
 		}
 	}
 	
-	@RequestMapping(value="/discrete/group", method=POST)
+	@RequestMapping(value="/stratification/discrete/group", method=POST)
 	public ResponseEntity<List<int[]>> blockDiscrete(@RequestBody(required=false) String[] data) {
 		if(data != null) {
 			return new ResponseEntity<List<int[]>>(rService.groupDiscreteValues(data), HttpStatus.CREATED);
@@ -45,7 +44,7 @@ public class RController {
 	}
 	
 	@RequestMapping(value="/sqrt", method=POST)
-	public ResponseEntity<Double> sqrt(double number) {
+	public ResponseEntity<Double> sqrt(@RequestBody Double number) {
 		
 		return new ResponseEntity<Double>(rService.sqrt(number), HttpStatus.CREATED);
 	}
