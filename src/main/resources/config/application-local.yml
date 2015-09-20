@@ -1,0 +1,3 @@
+kmd:
+  rengine:
+    blockFunction: source("/Users/jfcorugedo/Documents/git/kmd/kmd-math/blockFunction.R")

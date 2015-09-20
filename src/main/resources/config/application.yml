@@ -3,3 +3,6 @@ endpoints:
   beans: sensitive:false
 server:
     port: 8080
+kmd:
+  rengine:
+    blockFunction: source("/app/blockFunction.R")

@@ -1,17 +1,12 @@
 package com.jfcorugedo.rserver;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jfcorugedo.rserver.service.RService;
@@ -20,22 +15,40 @@ import com.jfcorugedo.rserver.service.RService;
 @RestController
 public class Application {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 	
 	@Inject
 	private RService rService;
 	
 	public static void main(String[] args) {
-        LOG.debug("\n****************\n* rJava Server *\n****************\n");
+        LOGGER.debug("\n****************\n* rJava Server *\n****************\n");
         
         SpringApplication app = new SpringApplication(Application.class);
         app.setShowBanner(false);
+        SimpleCommandLinePropertySource source = new SimpleCommandLinePropertySource(args);
+    	
+        // Check if the selected profile has been set as argument.
+        // if not the development profile will be added
+        addDefaultProfile(app, source);
         
         app.run(args);
     }
 	
-	@RequestMapping(value="/mean", method=POST)
-	public Double mean(@RequestBody List<Double> vector) throws Exception{
-		return rService.calculateMean(vector);
-	}
+	/**
+     * Set a default profile if it has not been set
+     */
+    private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
+        if (!source.containsProperty("spring.profiles.active")) {
+            app.setAdditionalProfiles("local");
+        }
+    }
+    
+    /**
+     * This method is needed because Sonar doesn't allow public constructors in a class with only static methods,
+     * but SpringBoot needs a public constructor in this class.
+     * This method should not be invoked
+     */
+    public void avoidSonarViolation(){
+    	LOGGER.warn("This method should not be invoked");
+    }
 }
