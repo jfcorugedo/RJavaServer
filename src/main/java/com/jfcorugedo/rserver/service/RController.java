@@ -45,7 +45,7 @@ public class RController {
 	}
 	
 	@RequestMapping(value="/sqrt", method=POST)
-	public ResponseEntity<Double> blockDiscrete(double number) {
+	public ResponseEntity<Double> sqrt(double number) {
 		
 		return new ResponseEntity<Double>(rService.sqrt(number), HttpStatus.CREATED);
 	}

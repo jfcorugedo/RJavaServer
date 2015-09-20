@@ -73,6 +73,12 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.5</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>

@@ -30,11 +30,34 @@ public class RControllerTest {
 	}
 	
 	@Test
-	public void testCallRService() {
+	public void testCallBlock() {
 		
 		double[] values = new double[]{1d,2d};
 		controller.block(values);
 		
 		verify(rService, times(1)).groupValues(values);
+	}
+	
+	@Test(expected=BadRequestException.class)
+	public void testBlockDiscreteThrowsExceptionWhenNullInput() {
+		
+		controller.blockDiscrete(null);
+	}
+	
+	@Test
+	public void testCallBlockDiscrete() {
+		
+		String[] values = new String[]{"a", "b", "c"};
+		controller.blockDiscrete(values);
+		
+		verify(rService, times(1)).groupDiscreteValues(values);
+	}
+	
+	@Test
+	public void testCallSqrt() {
+		
+		controller.sqrt(4d);
+		
+		verify(rService, times(1)).sqrt(4d);
 	}
 }

@@ -2,7 +2,7 @@ package com.jfcorugedo.rserver.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -72,5 +72,15 @@ public class RServiceImplTest {
 		REXPGenericVector vector = new REXPGenericVector(values);
 		
 		return vector;
+	}
+	
+	@Test
+	public void testSqrt() throws Exception{
+		
+		when(engineProvider.sqrt(anyDouble())).thenReturn(2d);
+		
+		double result = service.sqrt(4d);
+		
+		assertThat(result).isEqualTo(2d);
 	}
 }
