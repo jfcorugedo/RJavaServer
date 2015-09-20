@@ -15,7 +15,23 @@ Once these steps are done, you have to configure some variables inside your loca
 
 To sum up, look at the content of the script $R_HOME/library/rJava/jri/run and configure your local system usign the same variable names and values.
 
-Moreover, the server must be started with the JVM parameter -D-Djava.library.path pointing at the JRI installation directory (Ej: -Djava.library.path=/app/vendor/R/lib/R/library/rJava/jri/).
+Moreover, the server must be started with the JVM parameter -D-Djava.library.path pointing at the JRI installation directory, ie:
+
+    $JAVA_HOME/bin/java -Dserver.port=$PORT -Djava.library.path=/app/vendor/R/lib/R/library/rJava/jri/ -jar target/RJavaServer.jar
+
+In order to execute this server in Heroku, a Procfile has been added to the project. It can be deployen to any Heroku applications that has R environment installed.
+
+To install R inside a heroku application, you have to use multipack-buildpack and r-buildpack.
+
+To install this project into a Heroku server, follow theses steps:
+
+1. Create a new application that uses multipack buidpack typing in the command line:
+
+    heroku create --stack cedar-14 --buildpack https://github.com/heroku/heroku-buildpack-multi.git --app RJavaServer
+    
+2. Create a file called `.buildpacks` inside your project, and type here all the Heroku buildpacks you want to install in your environment (this project already contains this file)
+
+3. In addition to your application code, you must tell R which packages must be installed. This task is done inside a file called init.r (this project alrady contains a init.r script)
 
 If you have trouble finding this directory, try to look for the JRI SO library: 
 
@@ -29,17 +45,17 @@ To test the server, just try to execute a POST command over the `mean` resource.
 
 Curl example: 
 
-`curl http://localhost:8080/mean -X POST -d "[1,2,3,4,5,6,7,8,9.345]" -H "Content-type: application/json" -i``
+`curl http://localhost:8080/sqrt -X POST -d "5" -H "Content-type: application/json" -i``
 
 It should return:
 
-    HTTP/1.1 200 OK
+    HTTP/1.1 201 Created
     Server: Apache-Coyote/1.1
-    X-Application-Context: application:8080
+    X-Application-Context: application:local:8080
     Content-Type: application/json;charset=UTF-8
     Transfer-Encoding: chunked
-    Date: Tue, 08 Sep 2015 15:50:20 GMT
-    
-    5.038333333333333
+    Date: Sun, 20 Sep 2015 15:46:45 GMT
+
+    2.23606797749979
     
     
