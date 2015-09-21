@@ -65,17 +65,18 @@ public class JRIEngineProviderServiceIT {
 	}
 
 	@Test
-	@Ignore
-	public void testBlockFunction() {
+	public void testBlockFunction() throws Exception{
 	
-		REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION));
-		
-		if(LOGGER.isInfoEnabled()) {
-			LOGGER.info(blockResultToString(result));
+		for(int i = 0 ; i < 100 ; i++) {
+			REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION));
+			if(LOGGER.isInfoEnabled()) {
+				LOGGER.info(blockResultToString(result));
+			}
 		}
 	}
 	
 	@Test
+	@Ignore
 	public void testBlockDiscreteFunction() {
 	
 		REXP result = providerService.blockDiscreteFunction(new REXPInteger(generateIds(200)), new REXPString(generateRandomCities(200)));
