@@ -1,3 +1,6 @@
-kmd:
+rJavaServer:
   rengine:
     blockFunction: source("/Users/jfcorugedo/Documents/git/kmd/kmd-math/blockFunction.R")
+    rserveConf: /Users/jfcorugedo/Documents/git/RJavaServer/rserve.conf
+    rexe: /Library/Frameworks/R.framework/Versions/3.2/Resources/bin/exec/R
+    enableJRI: false

@@ -3,6 +3,9 @@ endpoints:
   beans: sensitive:false
 server:
     port: 8080
-kmd:
+rJavaServer:
   rengine:
     blockFunction: source("/app/blockFunction.R")
+    rserveConf: /app/rserve.conf
+    rexe: /app/vendor/R/lib/R/bin/R
+    enableJRI: false
