@@ -6,7 +6,7 @@
 ###########################################################
 # Update this line with the R packages to install:
 
-my_packages = c("blockTools","rJava","rServe","plyr")
+my_packages = c("blockTools","rJava","Rserve","plyr")
 
 ###########################################################
 
