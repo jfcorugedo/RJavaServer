@@ -7,6 +7,7 @@ This server needs an installation of R in the local OS, as well as the rJava pac
 
 * Install R in your machine (see https://cran.r-project.org/)
 * Install rJava using R console: type `install.package("rJava")` inside R console
+* Install Rserve using R console: type `install.package("Rserve")` inside R console
  
 Once these steps are done, you have to configure some variables inside your local system:
 
