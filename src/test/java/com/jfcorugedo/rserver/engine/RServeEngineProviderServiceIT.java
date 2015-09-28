@@ -26,11 +26,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jfcorugedo.rserver.Application;
 
-@Ignore("These tests require R environment installed")
+//@Ignore("These tests require R environment installed")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
-@ActiveProfiles(profiles={"local"})
+@ActiveProfiles(profiles={"local", "integrationtest"})
 public class RServeEngineProviderServiceIT {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(RServeEngineProviderServiceIT.class);
@@ -75,9 +75,9 @@ public class RServeEngineProviderServiceIT {
 	@Test
 	public void testBlockFunction() throws Exception{
 	
-		for(int t = 0 ; t < 10 ; t++) {
+		for(int t = 0 ; t < 5 ; t++) {
 			new Thread(() -> {
-				for(int i = 0 ; i < 10 ; i++) {
+				for(int i = 0 ; i < 5 ; i++) {
 					REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION));
 					if(LOGGER.isInfoEnabled()) {
 						LOGGER.info(blockResultToString(result));
@@ -85,7 +85,7 @@ public class RServeEngineProviderServiceIT {
 				}
 			}).start();
 		}
-		Thread.sleep(20000);
+		Thread.sleep(5000);
 	}
 	
 	@Test
