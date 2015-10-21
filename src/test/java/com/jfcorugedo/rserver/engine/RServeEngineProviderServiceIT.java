@@ -1,8 +1,11 @@
 package com.jfcorugedo.rserver.engine;
 
 import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -25,7 +28,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jfcorugedo.rserver.Application;
-import static org.assertj.core.api.Assertions.*;
 
 /**
  * In order to make these test work R_HOME environment variable must be present
@@ -37,7 +39,7 @@ import static org.assertj.core.api.Assertions.*;
  * @author jfcorugedo
  *
  */
-@Ignore("These tests require R environment installed")
+@Ignore("These tests require R environment installed and R_HOME variable setted")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
@@ -86,7 +88,25 @@ public class RServeEngineProviderServiceIT {
 	@Test
 	public void testBlockFunction() throws Exception{
 	
-		REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION));
+		List<Double> bigPopulation = Arrays.stream(TEST_BIG_POPULATION).boxed().collect(Collectors.toList());
+		Collections.shuffle(bigPopulation);
+		double[] shuffledPopulation = bigPopulation.stream().mapToDouble(Double::doubleValue).toArray();
+		REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION), new REXPDouble(shuffledPopulation));
+		
+		if(LOGGER.isInfoEnabled()) {
+			LOGGER.info(blockResultToString(result));
+		}
+
+		assertThat((((REXPString)((REXPGenericVector)result).asList().get(0)).asStrings())).hasSize(100);
+	}
+	
+	@Test
+	public void testGenericBlockFunction() {
+		
+		List<Double> bigPopulation = Arrays.stream(TEST_BIG_POPULATION).boxed().collect(Collectors.toList());
+		Collections.shuffle(bigPopulation);
+		double[] shuffledPopulation = bigPopulation.stream().mapToDouble(Double::doubleValue).toArray();
+		REXP result = providerService.blockGeneralFunction(new REXPInteger(generateIds(200)), newList(new REXPString(generateRandomCities(200))), newList(new REXPDouble(shuffledPopulation)));
 		
 		if(LOGGER.isInfoEnabled()) {
 			LOGGER.info(blockResultToString(result));

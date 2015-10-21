@@ -1,7 +1,12 @@
 package com.jfcorugedo.rserver.engine;
 
+import static java.lang.String.format;
+
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
@@ -31,6 +36,9 @@ public class RServeEngineProviderService implements REngineProviderService {
 	
 	/** Full path to the R executable file */
 	private String rexe;
+	
+	@Inject
+	private RConnectionFactory rConnectionFactory;
 	
 	/**
 	 * This method initializes REngine properly and make all the operations needed 
@@ -65,7 +73,7 @@ public class RServeEngineProviderService implements REngineProviderService {
 	        if(LOGGER.isInfoEnabled()) {
 	        	LOGGER.info("Opening connection to RServe daemon....");
 	        }
-	        engine = new RConnection();
+	        engine = rConnectionFactory.getConnection();
 	        if(LOGGER.isInfoEnabled()) {
 	        	LOGGER.info(String.format("Obtaining R server version: %d", ((RConnection)engine).getServerVersion()));
 	        }
@@ -73,27 +81,19 @@ public class RServeEngineProviderService implements REngineProviderService {
 		} catch(Exception e) {
 			LOGGER.error("Unexpected error setting up RServe environment", e);
 		} finally {
-			closeRServeConnection(engine);
+			rConnectionFactory.releaseConnection(engine);
 		}
 	}
 
-	private void closeRServeConnection(REngine engine) {
-		if(engine != null) {
-			if(!engine.close()) {
-				LOGGER.warn("Unexpected error closing RServe connection");
-			}
-		}
-	}
-	
 	@PreDestroy
 	public void tearDown() {
 		try {
 			if(LOGGER.isInfoEnabled()) {
 				LOGGER.info("Shuting down Rserve daemon....");
 			}
-			RConnection rConnection = new RConnection();
+			RConnection rConnection = rConnectionFactory.getConnection();
 			rConnection.shutdown();
-			rConnection.close();
+			rConnectionFactory.releaseConnection(rConnection);
 			if(LOGGER.isInfoEnabled()) {
 				LOGGER.info("Shutdown signal sent to Rserve daemon");
 			}
@@ -103,23 +103,62 @@ public class RServeEngineProviderService implements REngineProviderService {
 	}
 	
 	@Override
-	public REXP blockFunction(REXPInteger ids, REXPDouble values) {
+	public REXP blockFunction(REXPInteger ids, REXPDouble... values) {
 		
 		RList data = new RList();
 		data.add(ids);
-		data.add(values);
 		data.setKeyAt(0, "ids");
-		data.setKeyAt(1, "values");
+		StringBuilder valueNames = new StringBuilder();
+		for(int i = 0 ; i < values.length ; i++) {
+			data.add(values[i]);
+			valueNames.append("\"values"+i+"\",");
+			data.setKeyAt(i+1, "values"+i);
+		}
 		
+		String variableNames = valueNames.substring(0, valueNames.length()-1);
 		REngine engine = null;
 		try {
-			engine = new RConnection();
+			engine = rConnectionFactory.getConnection();
 			engine.assign("data", REXP.createDataFrame(data));
-			return engine.parseAndEval("blockFunction(data,c(\"ids\"),c(\"values\"))");
+			return engine.parseAndEval(format("blockFunction(data,c(\"ids\"),c(%s))", variableNames));
 		}catch(Exception e) {
 			throw new REngineException("Unexpected error while executing blockFunction", e);
 		} finally {
-			closeRServeConnection(engine);
+			rConnectionFactory.releaseConnection(engine);
+		}
+	}
+	
+	@Override
+	public REXP blockGeneralFunction(REXPInteger ids, List<REXPString> discreteValues, List<REXPDouble> continuousValues) {
+		
+		RList data = new RList();
+		data.add(ids);
+		data.setKeyAt(0, "ids");
+		StringBuilder discreteVariables = new StringBuilder();
+		for(int i = 0 ; i < discreteValues.size() ; i++) {
+			data.add(discreteValues.get(i));
+			discreteVariables.append("\"discreteValues"+i+"\",");
+			data.setKeyAt(i+1, "discreteValues"+i);
+		}
+		
+		StringBuilder continuousVariables = new StringBuilder();
+		for(int i = 0 ; i < continuousValues.size() ; i++) {
+			data.add(continuousValues.get(i));
+			continuousVariables.append("\"continuousValues"+i+"\",");
+			data.setKeyAt(i + discreteValues.size() + 1, "continuousValues"+i);
+		}
+				
+		String discreteVariableNames = discreteVariables.substring(0, discreteVariables.length()-1);
+		String continuousVariableNames = continuousVariables.substring(0, continuousVariables.length()-1);
+		REngine engine = null;
+		try {
+			engine = rConnectionFactory.getConnection();
+			engine.assign("data", REXP.createDataFrame(data));
+			return engine.parseAndEval(format("blockGeneralFunction(data,c(\"ids\"),c(%s),c(%s))", discreteVariableNames, continuousVariableNames));
+		}catch(Exception e) {
+			throw new REngineException("Unexpected error while executing blockFunction", e);
+		} finally {
+			rConnectionFactory.releaseConnection(engine);
 		}
 	}
 	
@@ -133,13 +172,13 @@ public class RServeEngineProviderService implements REngineProviderService {
 		
 		REngine engine = null;
 		try {
-			engine = new RConnection();
+			engine = rConnectionFactory.getConnection();
 			engine.assign("data", REXP.createDataFrame(data));
 			return engine.parseAndEval("blockDiscreteFunction(data,c(\"ids\"),c(\"values\"))");
 		}catch(Exception e) {
 			throw new REngineException("Unexpected error while executing blockDiscreteFunction", e);
 		} finally {
-			closeRServeConnection(engine);
+			rConnectionFactory.releaseConnection(engine);
 		}
 	}
 	
@@ -147,12 +186,12 @@ public class RServeEngineProviderService implements REngineProviderService {
 	public double sqrt(double number) {
 		REngine engine = null;
 		try {
-			engine = new RConnection();
+			engine = rConnectionFactory.getConnection();
 			return engine.parseAndEval(String.format("sqrt(%f)", number)).asDouble();
 		} catch(Exception e) {
 			throw new REngineException("Unexpected error while executing sqrt function", e);
 		} finally {
-			closeRServeConnection(engine);
+			rConnectionFactory.releaseConnection(engine);
 		}
 	}
 

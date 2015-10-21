@@ -1,5 +1,7 @@
 package com.jfcorugedo.rserver.engine;
 
+import java.util.List;
+
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REXPInteger;
@@ -15,10 +17,10 @@ public interface REngineProviderService {
 	 * 
 	 * @see https://cran.r-project.org/web/packages/blockTools/blockTools.pdf
 	 * @param ids Identifiers associated to each value
-	 * @param values Values that must be grouped into pairs
-	 * @return An object containing all the IDs grouped in pairs based on the distance of eachone
+	 * @param values Values used to perform the matching
+	 * @return An object containing all the IDs grouped in pairs based on the distance of each one
 	 */
-	REXP blockFunction(REXPInteger ids, REXPDouble values);
+	REXP blockFunction(REXPInteger ids, REXPDouble... values);
 
 	/**
 	 * Executes R block function against a list of discrete (non-numeric) values.
@@ -29,6 +31,8 @@ public interface REngineProviderService {
 	 * @return An object containing all the IDs grouped in pairs based on the distance of eachone
 	 */
 	REXP blockDiscreteFunction(REXPInteger ids, REXPString values);
+	
+	REXP blockGeneralFunction(REXPInteger ids, List<REXPString> discreteValues, List<REXPDouble> continuousValues);
 
 	/**
 	 * Calculates the sqare root of a given number

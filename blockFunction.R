@@ -49,17 +49,15 @@ addColumnForVariable <- function(data,var,value) {
   
 }
 
-# Block function for discrete variables. It creates artificial variables for every value of the
-# discrete variables and use them as block variables in the block function
-blockDiscreteFunction <- function(data,id.vars,block.vars) {
-   
+transformDiscreteVariables <- function(data,block.vars) {
+  
   newBlockVars = NULL
   
   # We might have mutiple block.vars
   for(var in block.vars) {
     uniqueValues = as.character(unique(data[[var]]))        # Get unique values for the blocking variable
     uniqueValues = uniqueValues[1:length(uniqueValues)-1]   # Get all values except the last one. Block function doesn't work with all values
-
+    
     newBlockVars = append(uniqueValues,newBlockVars)        # Add the values to the blockVars vector
     
     for(value in uniqueValues) {                            # For every value, create a column with that value
@@ -67,8 +65,31 @@ blockDiscreteFunction <- function(data,id.vars,block.vars) {
     }
   }
   
-  result <- blockFunction(data,id.vars,newBlockVars)        #Do the matching using the new columns
+  return(list(data=data,newBlockVars=newBlockVars))
+  
+}
+
+# Block function for discrete variables. It creates artificial variables for every value of the
+# discrete variables and use them as block variables in the block function
+blockDiscreteFunction <- function(data,id.vars,block.vars) {
+  
+  newBlockVars = NULL
+  transform <- transformDiscreteVariables(data,block.vars)
+  
+  print(transform)
+  
+  result <- blockFunction(transform$data,id.vars,transform$newBlockVars)        #Do the matching using the new columns
   
   return(result)
+}
+
+blockGeneralFunction <- function(data,id.vars,discreteVars,continuousVars) {
+  
+  transform <- transformDiscreteVariables(data,discreteVars)
+  print(transform$data)
+  result <- blockFunction(transform$data,id.vars,c(transform$newBlockVars,continuousVars))
+  
+  return(result)
+  
 }
 

@@ -1,5 +1,7 @@
 package com.jfcorugedo.rserver.engine;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.rosuda.JRI.Rengine;
@@ -75,25 +77,6 @@ public class JRIEngineProviderService implements REngineProviderService {
 	}
 	
 	@Override
-	public REXP blockFunction(REXPInteger ids, REXPDouble values) {
-		
-		RList data = new RList();
-		data.add(ids);
-		data.add(values);
-		data.setKeyAt(0, "ids");
-		data.setKeyAt(1, "values");
-		
-		try{
-			synchronized(engine){
-				engine.assign("data", REXP.createDataFrame(data));
-				return engine.parseAndEval("blockFunction(data,c(\"ids\"),c(\"values\"))");
-			}
-		}catch(Exception e) {
-			throw new REngineException("Unexpected error while executing blockFunction", e);
-		}
-	}
-	
-	@Override
 	public REXP blockDiscreteFunction(REXPInteger ids, REXPString values) {
 		RList data = new RList();
 		data.add(ids);
@@ -128,5 +111,34 @@ public class JRIEngineProviderService implements REngineProviderService {
 
 	public void setBlockFunction(String blockFunction) {
 		this.blockFunction = blockFunction;
+	}
+
+	@Override
+	public REXP blockFunction(REXPInteger ids, REXPDouble... values) {
+		
+		RList data = new RList();
+		data.add(ids);
+		data.setKeyAt(0, "ids");
+		StringBuilder valueNames = new StringBuilder();
+		for(int i = 0 ; i < values.length ; i++) {
+			data.add(values[i]);
+			valueNames.append("\"values"+i+"\",");
+			data.setKeyAt(i+1, "values"+i);
+		}
+		
+		try{
+			synchronized(engine){
+				engine.assign("data", REXP.createDataFrame(data));
+				return engine.parseAndEval("blockFunction(data,c(\"ids\"),c("+ valueNames.substring(0, valueNames.length()-1) +"))");
+			}
+		}catch(Exception e) {
+			throw new REngineException("Unexpected error while executing blockFunction", e);
+		}
+	}
+
+	@Override
+	public REXP blockGeneralFunction(REXPInteger ids, List<REXPString> discreteValues,
+			List<REXPDouble> continuousValues) {
+		throw new UnsupportedOperationException("JRI engine doesn't implement this method yet");
 	}
 }
