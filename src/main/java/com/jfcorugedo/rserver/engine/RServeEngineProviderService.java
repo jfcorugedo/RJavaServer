@@ -12,13 +12,13 @@ import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Service
-@Primary
 @ConfigurationProperties("rJavaServer.rengine")
+@ConditionalOnProperty(name="rJavaServer.rengine.enableJRI", havingValue="false", matchIfMissing=true)
 public class RServeEngineProviderService implements REngineProviderService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RServeEngineProviderService.class);
