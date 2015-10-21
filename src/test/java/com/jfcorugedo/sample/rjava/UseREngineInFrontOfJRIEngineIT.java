@@ -16,9 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Ignore("Maven can't execute this tests because they require a R environmet installed")
-public class UseREngineInFrontOfJRIEngineTest {
+public class UseREngineInFrontOfJRIEngineIT {
 
-	private static final Logger LOG = LoggerFactory.getLogger(UseREngineInFrontOfJRIEngineTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UseREngineInFrontOfJRIEngineIT.class);
 	
 	private static REngine engine;
 	

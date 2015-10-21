@@ -23,7 +23,7 @@ import org.rosuda.JRI.Rengine;
  *
  */
 @Ignore("Maven can't execute this tests because they require a R environmet installed")
-public class SimpleArithmeticCalculationsTest {
+public class SimpleArithmeticCalculationsIT {
 
 	private static Rengine engine = null;
 	

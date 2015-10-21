@@ -25,8 +25,19 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.jfcorugedo.rserver.Application;
+import static org.assertj.core.api.Assertions.*;
 
-//@Ignore("These tests require R environment installed")
+/**
+ * In order to make these test work R_HOME environment variable must be present
+ * 
+ * Export an environment variable with this value:
+ * 
+ * R_HOME=/Library/Frameworks/R.framework/Resources
+ * 
+ * @author jfcorugedo
+ *
+ */
+@Ignore("These tests require R environment installed")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
@@ -75,28 +86,25 @@ public class RServeEngineProviderServiceIT {
 	@Test
 	public void testBlockFunction() throws Exception{
 	
-		for(int t = 0 ; t < 5 ; t++) {
-			new Thread(() -> {
-				for(int i = 0 ; i < 5 ; i++) {
-					REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION));
-					if(LOGGER.isInfoEnabled()) {
-						LOGGER.info(blockResultToString(result));
-					}
-				}
-			}).start();
-		}
-		Thread.sleep(5000);
-	}
-	
-	@Test
-	@Ignore
-	public void testBlockDiscreteFunction() {
-	
-		REXP result = providerService.blockDiscreteFunction(new REXPInteger(generateIds(200)), new REXPString(generateRandomCities(200)));
+		REXP result = providerService.blockFunction(new REXPInteger(generateIds(200)), new REXPDouble(TEST_BIG_POPULATION));
 		
 		if(LOGGER.isInfoEnabled()) {
 			LOGGER.info(blockResultToString(result));
 		}
+
+		assertThat((((REXPString)((REXPGenericVector)result).asList().get(0)).asStrings())).hasSize(100);
+	}
+	
+	@Test
+	public void testBlockDiscreteFunction() {
+	
+		REXP result = providerService.blockDiscreteFunction(new REXPInteger(generateIds(50)), new REXPString(generateRandomCities(50)));
+		
+		if(LOGGER.isInfoEnabled()) {
+			LOGGER.info(blockResultToString(result));
+		}
+		
+		assertThat((((REXPString)((REXPGenericVector)result).asList().get(0)).asStrings())).hasSize(25);
 	}
 	
 	private String[] generateRandomCities(int sampleSize) {
