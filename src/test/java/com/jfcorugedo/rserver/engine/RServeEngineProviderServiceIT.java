@@ -127,6 +127,18 @@ public class RServeEngineProviderServiceIT {
 		assertThat((((REXPString)((REXPGenericVector)result).asList().get(0)).asStrings())).hasSize(25);
 	}
 	
+	@Test
+	public void testBlockDiscreteFunctionUsingTwoVariables() {
+	
+		REXP result = providerService.blockDiscreteFunction(new REXPInteger(generateIds(50)), new REXPString(generateRandomCities(50)), new REXPString(generateRandomCountries(50)));
+		
+		if(LOGGER.isInfoEnabled()) {
+			LOGGER.info(blockResultToString(result));
+		}
+		
+		assertThat((((REXPString)((REXPGenericVector)result).asList().get(0)).asStrings())).hasSize(25);
+	}
+	
 	private String[] generateRandomCities(int sampleSize) {
 		EnumeratedDistribution<String> cityDistribution = 
 				new EnumeratedDistribution<String>(
@@ -138,6 +150,21 @@ public class RServeEngineProviderServiceIT {
 														new Pair<String, Double>("Paris", 1.0),
 														new Pair<String, Double>("Rome", 1.0),
 														new Pair<String, Double>("Oslo", 1.0)
+													)); 
+		return Arrays.stream(cityDistribution.sample(sampleSize)).map(city -> (String)city).collect(Collectors.toList()).toArray(new String[0]);
+	}
+	
+	private String[] generateRandomCountries(int sampleSize) {
+		EnumeratedDistribution<String> cityDistribution = 
+				new EnumeratedDistribution<String>(
+													newList(
+														new Pair<String, Double>("Spain", 1.0),
+														new Pair<String, Double>("England", 1.0),
+														new Pair<String, Double>("USA", 1.0),
+														new Pair<String, Double>("France", 1.0),
+														new Pair<String, Double>("Italy", 1.0),
+														new Pair<String, Double>("Norway", 1.0),
+														new Pair<String, Double>("Germany", 1.0)
 													)); 
 		return Arrays.stream(cityDistribution.sample(sampleSize)).map(city -> (String)city).collect(Collectors.toList()).toArray(new String[0]);
 	}
