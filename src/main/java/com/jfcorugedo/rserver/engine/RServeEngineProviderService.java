@@ -111,8 +111,8 @@ public class RServeEngineProviderService implements REngineProviderService {
 		StringBuilder valueNames = new StringBuilder();
 		for(int i = 0 ; i < values.length ; i++) {
 			data.add(values[i]);
-			valueNames.append("\"values"+i+"\",");
-			data.setKeyAt(i+1, "values"+i);
+			valueNames.append(format("\"values%d\",", i));
+			data.setKeyAt(i+1, format("values%d",i));
 		}
 		
 		String variableNames = valueNames.substring(0, valueNames.length()-1);
@@ -137,15 +137,15 @@ public class RServeEngineProviderService implements REngineProviderService {
 		StringBuilder discreteVariables = new StringBuilder();
 		for(int i = 0 ; i < discreteValues.size() ; i++) {
 			data.add(discreteValues.get(i));
-			discreteVariables.append("\"discreteValues"+i+"\",");
-			data.setKeyAt(i+1, "discreteValues"+i);
+			discreteVariables.append(format("\"discreteValues%d\",", i));
+			data.setKeyAt(i+1, format("discreteValues", i));
 		}
 		
 		StringBuilder continuousVariables = new StringBuilder();
 		for(int i = 0 ; i < continuousValues.size() ; i++) {
 			data.add(continuousValues.get(i));
-			continuousVariables.append("\"continuousValues"+i+"\",");
-			data.setKeyAt(i + discreteValues.size() + 1, "continuousValues"+i);
+			continuousVariables.append(format("\"continuousValues%d\",", i));
+			data.setKeyAt(i + discreteValues.size() + 1, format("continuousValues%d", i));
 		}
 				
 		String discreteVariableNames = discreteVariables.substring(0, discreteVariables.length()-1);
@@ -170,8 +170,8 @@ public class RServeEngineProviderService implements REngineProviderService {
 		StringBuilder valueNames = new StringBuilder();
 		for(int i = 0 ; i < values.length ; i++) {
 			data.add(values[i]);
-			valueNames.append("\"values"+i+"\",");
-			data.setKeyAt(i+1, "values"+i);
+			valueNames.append(format("\"values%d\",", i));
+			data.setKeyAt(i+1, format("values%d",i));
 		}
 		
 		REngine engine = null;
