@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -44,6 +45,7 @@ import com.jfcorugedo.rserver.Application;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
 @ActiveProfiles(profiles={"local", "integrationtest"})
+@DirtiesContext
 public class RServeEngineProviderServiceIT {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(RServeEngineProviderServiceIT.class);
