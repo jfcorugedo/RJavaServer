@@ -30,7 +30,7 @@ public interface REngineProviderService {
 	 * @param values Values that must be grouped into pairs
 	 * @return An object containing all the IDs grouped in pairs based on the distance of eachone
 	 */
-	REXP blockDiscreteFunction(REXPInteger ids, REXPString values);
+	REXP blockDiscreteFunction(REXPInteger ids, REXPString... values);
 	
 	REXP blockGeneralFunction(REXPInteger ids, List<REXPString> discreteValues, List<REXPDouble> continuousValues);
 

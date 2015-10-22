@@ -163,18 +163,23 @@ public class RServeEngineProviderService implements REngineProviderService {
 	}
 	
 	@Override
-	public REXP blockDiscreteFunction(REXPInteger ids, REXPString values) {
+	public REXP blockDiscreteFunction(REXPInteger ids, REXPString... values) {
 		RList data = new RList();
 		data.add(ids);
-		data.add(values);
 		data.setKeyAt(0, "ids");
-		data.setKeyAt(1, "values");
+		StringBuilder valueNames = new StringBuilder();
+		for(int i = 0 ; i < values.length ; i++) {
+			data.add(values[i]);
+			valueNames.append("\"values"+i+"\",");
+			data.setKeyAt(i+1, "values"+i);
+		}
 		
 		REngine engine = null;
+		String variableNames = valueNames.substring(0, valueNames.length()-1);
 		try {
 			engine = rConnectionFactory.getConnection();
 			engine.assign("data", REXP.createDataFrame(data));
-			return engine.parseAndEval("blockDiscreteFunction(data,c(\"ids\"),c(\"values\"))");
+			return engine.parseAndEval(format("blockDiscreteFunction(data,c(\"ids\"),c(%s))", variableNames));
 		}catch(Exception e) {
 			throw new REngineException("Unexpected error while executing blockDiscreteFunction", e);
 		} finally {

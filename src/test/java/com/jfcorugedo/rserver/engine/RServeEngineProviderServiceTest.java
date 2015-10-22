@@ -90,6 +90,19 @@ public class RServeEngineProviderServiceTest {
 		assertThat(rCommand.getValue()).isEqualTo("blockFunction(data,c(\"ids\"),c(\"values0\"))");
 	}
 	
+	@Test
+	public void blockFunctionUsingMoreThanOneVariable() throws Exception{
+		RConnection rConnectionMock = mock(RConnection.class);
+		when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+		
+		rServeEngineProviderService.blockFunction(getDemoIds(), getDemoContinuousVars().get(0), getDemoContinuousVars().get(0));
+		
+		verify(rConnectionMock, times(1)).assign(eq("data"), any(REXP.class));
+		ArgumentCaptor<String> rCommand = ArgumentCaptor.forClass(String.class);
+		verify(rConnectionMock, times(1)).parseAndEval(rCommand.capture());
+		assertThat(rCommand.getValue()).isEqualTo("blockFunction(data,c(\"ids\"),c(\"values0\",\"values1\"))");
+	}
+	
 	@Test(expected=REngineException.class)
 	public void blockFunctionUnexpectedError() throws Exception{
 		
@@ -113,7 +126,20 @@ public class RServeEngineProviderServiceTest {
 		verify(rConnectionMock, times(1)).assign(eq("data"), any(REXP.class));
 		ArgumentCaptor<String> rCommand = ArgumentCaptor.forClass(String.class);
 		verify(rConnectionMock, times(1)).parseAndEval(rCommand.capture());
-		assertThat(rCommand.getValue()).isEqualTo("blockDiscreteFunction(data,c(\"ids\"),c(\"values\"))");
+		assertThat(rCommand.getValue()).isEqualTo("blockDiscreteFunction(data,c(\"ids\"),c(\"values0\"))");
+	}
+	
+	@Test
+	public void blockDiscreteFunctionUsingMoreThanOneVariable() throws Exception{
+		RConnection rConnectionMock = mock(RConnection.class);
+		when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+		
+		rServeEngineProviderService.blockDiscreteFunction(getDemoIds(), getDemoDiscreteVars().get(0), getDemoDiscreteVars().get(0));
+		
+		verify(rConnectionMock, times(1)).assign(eq("data"), any(REXP.class));
+		ArgumentCaptor<String> rCommand = ArgumentCaptor.forClass(String.class);
+		verify(rConnectionMock, times(1)).parseAndEval(rCommand.capture());
+		assertThat(rCommand.getValue()).isEqualTo("blockDiscreteFunction(data,c(\"ids\"),c(\"values0\",\"values1\"))");
 	}
 	
 	@Test(expected=REngineException.class)
