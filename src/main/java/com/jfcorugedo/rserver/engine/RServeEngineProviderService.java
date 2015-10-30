@@ -52,6 +52,9 @@ public class RServeEngineProviderService implements REngineProviderService {
 		
 		REngine engine = null;
 		try {
+			
+			shutdownPreviousRuningInstances();
+			
 	        if(LOGGER.isInfoEnabled()) {
 	        	LOGGER.info("Starting RServe process...");
 	        }
@@ -83,6 +86,14 @@ public class RServeEngineProviderService implements REngineProviderService {
 		} finally {
 			rConnectionFactory.releaseConnection(engine);
 		}
+	}
+	
+	private void shutdownPreviousRuningInstances() {
+		if(LOGGER.isInfoEnabled()) {
+			LOGGER.info("Cleaning old Rserve running instances...");
+		}
+		
+		tearDown();
 	}
 
 	@PreDestroy
