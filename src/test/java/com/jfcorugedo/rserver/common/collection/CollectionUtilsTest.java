@@ -139,6 +139,6 @@ public class CollectionUtilsTest {
 		
 		double[] array = CollectionUtils.listToPrimitiveArray(list);
 		
-		assertThat(array).hasSize(0);
+		assertThat(array).hasSize(1);
 	}
 }
