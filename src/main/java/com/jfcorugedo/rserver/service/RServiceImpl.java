@@ -3,6 +3,7 @@ package com.jfcorugedo.rserver.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 
@@ -92,11 +93,7 @@ public class RServiceImpl implements RService{
 	}
 
 	private int[] generateIds(int length) {
-		int[] ids = new int[length];
-		for(int i = 0 ; i < length ; i++) {
-			ids[i] = i;
-		}
-		return ids;
+		return IntStream.range(0, length).toArray();
 	}
 
 	private String blockResultToString(REXP result) {
