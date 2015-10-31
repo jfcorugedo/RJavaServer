@@ -1,4 +1,4 @@
-# RJavaServer
+# RJavaServer [![Build Status](https://travis-ci.org/jfcorugedo/RJavaServer.svg?branch=master)](https://travis-ci.org/jfcorugedo/RJavaServer)
 Java server that can call R functions using JRI and rJava packages
 
 ## Requirements
