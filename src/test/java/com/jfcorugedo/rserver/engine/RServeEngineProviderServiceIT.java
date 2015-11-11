@@ -45,7 +45,6 @@ import com.jfcorugedo.rserver.Application;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
 @ActiveProfiles(profiles={"local", "integrationtest"})
-@DirtiesContext
 public class RServeEngineProviderServiceIT {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(RServeEngineProviderServiceIT.class);
