@@ -26,7 +26,7 @@ public class RController {
 	private RService rService;
 	
 	@RequestMapping(value="/stratification/continuous/group", method=POST)
-	public ResponseEntity<List<int[]>> block(@RequestBody(required=false) double[] data) {
+	public ResponseEntity<List<int[]>> block(@RequestBody(required=false) List<double[]> data) {
 		if(data != null) {
 			return new ResponseEntity<List<int[]>>(rService.groupValues(data), HttpStatus.CREATED);
 		} else {
@@ -35,7 +35,7 @@ public class RController {
 	}
 	
 	@RequestMapping(value="/stratification/discrete/group", method=POST)
-	public ResponseEntity<List<int[]>> blockDiscrete(@RequestBody(required=false) String[] data) {
+	public ResponseEntity<List<int[]>> blockDiscrete(@RequestBody(required=false) List<String[]> data) {
 		if(data != null) {
 			return new ResponseEntity<List<int[]>>(rService.groupDiscreteValues(data), HttpStatus.CREATED);
 		} else {

@@ -83,4 +83,10 @@ public class JRIEngineProviderServiceTest {
 		
 		assertThat(result).isEqualTo(2d);
 	}
+	
+	@Test(expected=UnsupportedOperationException.class)
+	public void ksTestIsNotImplementedYet() {
+		
+		service.ksTest(mock(REXPDouble.class), mock(REXPDouble.class));
+	}
 }

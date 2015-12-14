@@ -3,6 +3,9 @@ package com.jfcorugedo.rserver.service;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -11,6 +14,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import com.jfcorugedo.rserver.exception.BadRequestException;
+import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
 
 public class RControllerTest {
 	
@@ -32,7 +36,7 @@ public class RControllerTest {
 	@Test
 	public void testCallBlock() {
 		
-		double[] values = new double[]{1d,2d};
+		List<double[]> values = newList(new double[]{1d,2d});
 		controller.block(values);
 		
 		verify(rService, times(1)).groupValues(values);
@@ -47,7 +51,7 @@ public class RControllerTest {
 	@Test
 	public void testCallBlockDiscrete() {
 		
-		String[] values = new String[]{"a", "b", "c"};
+		List<String[]> values = buildList(new String[]{"a", "b", "c"});
 		controller.blockDiscrete(values);
 		
 		verify(rService, times(1)).groupDiscreteValues(values);
@@ -59,5 +63,13 @@ public class RControllerTest {
 		controller.sqrt(4d);
 		
 		verify(rService, times(1)).sqrt(4d);
+	}
+	
+	private List<String[]> buildList(String[]... strings) {
+		List<String[]> result = new ArrayList<String[]>();
+		for(String[] value : strings) {
+			result.add(value);
+		}
+		return result;
 	}
 }

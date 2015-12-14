@@ -146,4 +146,10 @@ public class JRIEngineProviderService implements REngineProviderService {
 			List<REXPDouble> continuousValues) {
 		throw new UnsupportedOperationException("JRI engine doesn't implement this method yet");
 	}
+
+	@Override
+	public double ksTest(REXPDouble x, REXPDouble y) {
+		
+		throw new UnsupportedOperationException("JRI engine doesn't implement this method yet");
+	}
 }

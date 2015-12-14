@@ -1,17 +1,29 @@
 package com.jfcorugedo.rserver.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
+
 import java.util.Random;
 
-import org.junit.BeforeClass;
+import javax.inject.Inject;
+
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.jfcorugedo.rserver.engine.JRIEngineProviderService;
+import com.jfcorugedo.rserver.Application;
 
 @Ignore("These tests requires R environment installed")
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
+@WebIntegrationTest
+@ActiveProfiles(profiles={"local", "integrationtest"})
 public class RServiceImplIT {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RServiceImplIT.class);
@@ -49,37 +61,39 @@ public class RServiceImplIT {
 		}
 	}
 	
-	private static RServiceImpl service = new RServiceImpl();
-	
-	@BeforeClass
-	public static void setUp() {
-		service = new RServiceImpl();
-		JRIEngineProviderService providerService = new JRIEngineProviderService();
-		providerService.setBlockFunction("source(\"/Users/jfcorugedo/Documents/git/kmd/kmd-math/blockFunction.R\")");
-		providerService.setUpR();
-		
-		ReflectionTestUtils.setField(service, "engineProvider", providerService);
-	}
+	@Inject
+	private RServiceImpl service;
 	
 	@Test
 	public void testBlockFunction() {
 		
-		for(int i = 0 ; i < 1000 ; i++) {
+		for(int i = 0 ; i < 2 ; i++) {
 			if(LOGGER.isInfoEnabled()) {
 				LOGGER.info(Integer.toString(i));
 			}
-			service.groupValues(TEST_BIG_POPULATION);
+			service.groupValues(newList(TEST_BIG_POPULATION));
 		}
 	}
 	
 	@Test
 	public void testBlockFunctionWithRandom() {
 		
-		for(int i = 0 ; i < 1000 ; i++) {
+		for(int i = 0 ; i < 2 ; i++) {
 			if(LOGGER.isInfoEnabled()) {
 				LOGGER.info(Integer.toString(i));
 			}
-			service.groupValues(new Random().doubles(200).map(v -> v*20).toArray());
+			service.groupValues(newList(new Random().doubles(200).map(v -> v*20).toArray()));
 		}
+	}
+	
+	@Test
+	public void ksTest() {
+		
+		double[] x = new double[]{ 1.0, 3.0, 50.0};
+		double[] y = new double[]{ 2.0, 4.0, 90.0, 34.1};
+		
+		double pValue = service.kolmogorovSmirnovTest(x, y);
+		
+		assertThat(pValue).isGreaterThan(0.80);
 	}
 }

@@ -21,8 +21,10 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
+import org.rosuda.REngine.REXPGenericVector;
 import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPString;
+import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 
 public class RServeEngineProviderServiceTest {
@@ -153,5 +155,55 @@ public class RServeEngineProviderServiceTest {
 		
 		verify(rConnectionMock, times(1)).assign(eq("data"), any(REXP.class));
 		verify(rConnectionMock, times(1)).parseAndEval(anyString());
+	}
+	
+	@Test
+	public void ksTest() throws Exception{
+		
+		RConnection rConnectionMock = mock(RConnection.class);
+		when(rConnectionMock.parseAndEval(anyString())).thenReturn(new REXPGenericVector(new RList(new REXP[]{new REXPDouble(new double[]{0.15})})));
+		when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+		REXPDouble demoVars = getDemoContinuousVars().get(0);
+		
+		rServeEngineProviderService.ksTest(demoVars, demoVars);
+		
+		verify(rConnectionMock, times(1)).assign(eq("x"), any(REXP.class));
+		verify(rConnectionMock, times(1)).assign(eq("y"), any(REXP.class));
+		ArgumentCaptor<String> rCommand = ArgumentCaptor.forClass(String.class);
+		verify(rConnectionMock, times(1)).parseAndEval(rCommand.capture());
+		assertThat(rCommand.getValue()).isEqualTo("ks.test(x, y)['p.value']");
+	}
+	
+	@Test(expected=REngineException.class)
+	public void ksTestThrowsException() throws Exception{
+		
+		RConnection rConnectionMock = mock(RConnection.class);
+		when(rConnectionMock.parseAndEval(anyString())).thenThrow(new RuntimeException());
+		when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+		REXPDouble demoVars = getDemoContinuousVars().get(0);
+		
+		rServeEngineProviderService.ksTest(demoVars, demoVars);
+	}
+	
+	@Test
+	public void testSqrt() throws Exception{
+		
+		RConnection rConnectionMock = mock(RConnection.class);
+		when(rConnectionMock.parseAndEval("sqrt(4.000000)")).thenReturn(new REXPDouble(2.0));
+		when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+		
+		double result = rServeEngineProviderService.sqrt(4.0);
+		
+		assertThat(result).isEqualTo(2.0);
+	}
+	
+	@Test(expected=REngineException.class)
+	public void testSqrtThrowsException() throws Exception{
+		
+		RConnection rConnectionMock = mock(RConnection.class);
+		when(rConnectionMock.parseAndEval(anyString())).thenThrow(new RuntimeException());
+		when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+		
+		rServeEngineProviderService.sqrt(4.0);
 	}
 }

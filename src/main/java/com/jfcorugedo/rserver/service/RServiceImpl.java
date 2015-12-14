@@ -3,6 +3,7 @@ package com.jfcorugedo.rserver.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.inject.Inject;
@@ -27,33 +28,58 @@ public class RServiceImpl implements RService{
 	private REngineProviderService engineProvider;
 	
 	@Override
-	public List<int[]> groupValues(double[] values) {
+	public List<int[]> groupValues(List<double[]> values) {
 		
-		REXPInteger rIds = new REXPInteger(generateIds(values.length));
-		REXPDouble rValues = new REXPDouble(values);
+		REXPInteger rIds = new REXPInteger(generateIds(values.get(0).length));
+		REXPDouble[] rValues = values.stream().map(rawValues -> new REXPDouble(rawValues)).toArray(REXPDouble[]::new);
 		
 		REXP result = engineProvider.blockFunction(rIds, rValues);
 		
 		if(LOGGER.isDebugEnabled()) {
-			LOGGER.debug(blockResultToString(result));
+			LOGGER.debug("blockFunction:\n{}", blockResultToString(result));
 		}
 		return formatResult(result);
 	}
 	
 	@Override
-	public List<int[]> groupDiscreteValues(String[] values) {
+	public List<int[]> groupDiscreteValues(List<String[]> values) {
 		
-		REXPInteger rIds = new REXPInteger(generateIds(values.length));
-		REXPString rValues = new REXPString(values);
+		REXPInteger rIds = new REXPInteger(generateIds(values.get(0).length));
+		REXPString[] rValues = values.stream().map(rawValues -> new REXPString(rawValues)).toArray(REXPString[]::new);
 		
 		REXP result = engineProvider.blockDiscreteFunction(rIds, rValues);
 		
 		if(LOGGER.isDebugEnabled()) {
-			LOGGER.debug(blockResultToString(result));
+			LOGGER.debug("blockDiscreteFunction:\n{}", blockResultToString(result));
+		}
+		return formatResult(result);
+	}
+	
+	@Override
+	public List<int[]> groupMultipleValues(List<String[]> discreteValues, List<double[]> continuousValues) {
+		
+		REXPInteger rIds = new REXPInteger(generateIds(discreteValues.get(0).length));
+		List<REXPString> discreteNativeValues = discreteValues.stream()
+														.map(values -> new REXPString(values))
+														.collect(Collectors.toList()); 
+		List<REXPDouble> continuousNativeValues = continuousValues.stream()
+															.map(values -> new REXPDouble(values))
+															.collect(Collectors.toList());
+		
+		REXP result = engineProvider.blockGeneralFunction(rIds, discreteNativeValues, continuousNativeValues);
+				
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("blockGeneralFunction:\n{}", blockResultToString(result));
 		}
 		return formatResult(result);
 	}
 
+	/**
+	 * Format the results from Rserve objects to java standard objects.
+	 * If the results are odd, the last element of the list will contain only one number
+	 * @param result
+	 * @return
+	 */
 	private List<int[]> formatResult(REXP result) {
 		REXPGenericVector vector = (REXPGenericVector) result;
 		
@@ -87,8 +113,7 @@ public class RServiceImpl implements RService{
 						).toArray(Integer[]::new);
 		} else {
 			int[] idsAsArray = ((REXPInteger)ids).asIntegers();
-			Integer[] result = (Integer[])Arrays.stream(idsAsArray).boxed().toArray(Integer[]::new);
-			return result;
+			return (Integer[])Arrays.stream(idsAsArray).boxed().toArray(Integer[]::new);
 		}
 	}
 
@@ -112,7 +137,17 @@ public class RServiceImpl implements RService{
 	}
 
 	@Override
+	public double kolmogorovSmirnovTest(double[] x, double[] y) {
+		
+		REXPDouble sampleX = new REXPDouble(x);
+		REXPDouble sampleY = new REXPDouble(y);
+		
+		return engineProvider.ksTest(sampleX, sampleY);
+	}
+
+	@Override
 	public double sqrt(double number) {
 		return engineProvider.sqrt(number);
 	}
+
 }

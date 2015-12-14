@@ -226,4 +226,20 @@ public class RServeEngineProviderService implements REngineProviderService {
 	public void setRexe(String rexe) {
 		this.rexe = rexe;
 	}
+
+	@Override
+	public double ksTest(REXPDouble x, REXPDouble y) {
+		
+		REngine engine = null;
+		try {
+			engine = rConnectionFactory.getConnection();
+			engine.assign("x", x);
+			engine.assign("y", y);
+			return engine.parseAndEval("ks.test(x, y)['p.value']").asList().at(0).asDouble();
+		}catch(Exception e) {
+			throw new REngineException("Unexpected error while executing Kolmogorov-Smirnov test", e);
+		} finally {
+			rConnectionFactory.releaseConnection(engine);
+		}
+	}
 }

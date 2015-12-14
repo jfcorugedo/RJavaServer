@@ -191,4 +191,15 @@ public class RServeEngineProviderServiceIT {
 		
 		return sb.toString();
 	}
+	
+	@Test
+	public void ksTest() {
+
+		REXPDouble x = new REXPDouble(new double[]{3.5,4.0,5.0,25.0});
+		REXPDouble y = new REXPDouble(new double[]{3.5,4.0,5.0,25.0});
+		
+		double pValue = providerService.ksTest(x, y);
+		
+		assertThat(pValue).isGreaterThan(0.05);
+	}
 }
