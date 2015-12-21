@@ -9,7 +9,13 @@ This server needs an installation of R in the local OS, as well as the rJava pac
 * Install rJava using R console: type `install.package("rJava")` inside R console
 * Install Rserve using R console: type `install.package("Rserve")` inside R console
  
-Once these steps are done, you have to configure some variables inside your local system:
+Once these steps are done, you have to configure some variables inside your local system depending on the approach you're going to use.
+
+### Rserve:
+
+* **R_HOME**: Pointing to your local R installation (Ej: /Library/Frameworks/R.framework/Resources)
+
+### JRI:
 
 * **R_HOME**: Pointing to your local R installation (Ej: /Library/Frameworks/R.framework/Resources)
 * **LD_LIBRARY_PATH**: Pointing to R lib directory as well as JRI directory (EJ: /app/vendor/R/lib/R/lib:/app/vendor/R/lib/R/bin)
@@ -20,6 +26,11 @@ Moreover, the server must be started with the JVM parameter -D-Djava.library.pat
 
     $JAVA_HOME/bin/java -Dserver.port=$PORT -Djava.library.path=/app/vendor/R/lib/R/library/rJava/jri/ -jar target/RJavaServer.jar
 
+If you have trouble finding this directory, try to look for the JRI SO library: 
+
+find / -name "libjri.*"
+
+## Heroku
 In order to execute this server in Heroku, a Procfile has been added to the project. It can be deployen to any Heroku applications that has R environment installed.
 
 To install R inside a heroku application, you have to use multipack-buildpack and r-buildpack.
@@ -30,13 +41,10 @@ To install this project into a Heroku server, follow theses steps:
 
     heroku create --stack cedar-14 --buildpack https://github.com/heroku/heroku-buildpack-multi.git --app RJavaServer
     
-2. Create a file called `.buildpacks` inside your project, and type here all the Heroku buildpacks you want to install in your environment (this project already contains this file)
+2. Create a file called `.buildpacks` inside your project, and type here all the Heroku buildpacks you want to install in your environment (**_this project already contains this file_**)
 
-3. In addition to your application code, you must tell R which packages must be installed. This task is done inside a file called init.r (this project alrady contains a init.r script)
+3. In addition to your application code, you must tell R which packages must be installed. This task is done inside a file called init.r (**_this project already contains a init.r script_**)
 
-If you have trouble finding this directory, try to look for the JRI SO library: 
-
-find / -name "libjri.*"
 
 ## Usage
 
@@ -60,3 +68,14 @@ It should return:
     2.23606797749979
     
     
+## Datadog
+
+This project has a module that automatically sends metrics to Datadog, an online monitoring system.
+
+To enable this feature, just create an account in Datadog (https://www.datadoghq.com/) and put your API Key in the configuration file (application.yml):
+
+    metrics:
+      apiKey: <your API key>
+      host: <host of this app (optional)>
+      period: <time, in seconds, between events>
+      enabled: true
