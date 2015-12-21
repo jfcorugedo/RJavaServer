@@ -4,3 +4,6 @@ rJavaServer:
     rserveConf: /Users/jfcorugedo/Documents/git/RJavaServer/rserve_local.conf
     rexe: /Library/Frameworks/R.framework/Versions/3.2/Resources/bin/exec/R
     enableJRI: false
+  metrics:
+    enabled: false
+    period: 10

@@ -62,6 +62,7 @@
     <logger name="sun.rmi.transport" level="WARN"/>
     <logger name="org.springframework.web" level="INFO"/>
     <logger name="org.springframework.data" level="INFO"/>
+    <logger name="com.codahale.metrics" level="DEBUG"/>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>

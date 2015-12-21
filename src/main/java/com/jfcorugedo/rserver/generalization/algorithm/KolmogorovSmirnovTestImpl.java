@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.codahale.metrics.annotation.Timed;
 import com.jfcorugedo.rserver.service.RService;
 
 @Component
@@ -28,6 +29,7 @@ public class KolmogorovSmirnovTestImpl implements KolmogorovSmirnovTest {
 	 * 
 	 */
 	@Override
+	@Timed
 	public boolean areGeneralizable(double[] x, double[] y){
 		
 		if(LOGGER.isDebugEnabled()) {

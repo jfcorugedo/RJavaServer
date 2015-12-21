@@ -2,6 +2,7 @@ package com.jfcorugedo.rserver.generalization.algorithm;
 
 import org.springframework.stereotype.Component;
 
+import com.codahale.metrics.annotation.Timed;
 import com.jfcorugedo.rserver.exception.DimensionMismatchException;
 
 import static java.lang.String.format;
@@ -14,6 +15,7 @@ public class ChiSquareTestImpl implements ChiSquareTest {
 	private org.apache.commons.math3.stat.inference.ChiSquareTest chiTest = new org.apache.commons.math3.stat.inference.ChiSquareTest();
 	
 	@Override
+	@Timed
 	public boolean areGeneralizable(long[] observed1, long[] observed2) {
 		
 		if(observed1.length != observed2.length) {

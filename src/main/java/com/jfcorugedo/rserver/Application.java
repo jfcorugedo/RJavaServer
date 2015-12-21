@@ -1,24 +1,18 @@
 package com.jfcorugedo.rserver;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.jfcorugedo.rserver.service.RService;
+import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
 
 @SpringBootApplication
-@RestController
+@EnableMetrics
 public class Application {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
-	
-	@Inject
-	private RService rService;
 	
 	public static void main(String[] args) {
         LOGGER.debug("\n****************\n* rJava Server *\n****************\n");

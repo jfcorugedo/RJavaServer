@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.jfcorugedo.rserver.exception.BadRequestException;
+import com.jfcorugedo.rserver.generalization.algorithm.KolmogorovSmirnovTest;
 
 
 @RestController
@@ -24,6 +26,9 @@ public class RController {
 			
 	@Inject
 	private RService rService;
+	
+	@Inject
+	private KolmogorovSmirnovTest ksTest;
 	
 	@RequestMapping(value="/stratification/continuous/group", method=POST)
 	public ResponseEntity<List<int[]>> block(@RequestBody(required=false) List<double[]> data) {
@@ -40,6 +45,19 @@ public class RController {
 			return new ResponseEntity<List<int[]>>(rService.groupDiscreteValues(data), HttpStatus.CREATED);
 		} else {
 			throw new BadRequestException("This service needs all the values of the stratification variable");
+		}
+	}
+	
+	@RequestMapping(value="/ks-test", method=POST)
+	@Timed
+	public ResponseEntity<String> areGeneralizable(@RequestBody List<double[]> values) {
+
+		if(values.size() == 2) {
+			boolean areGeneralizable = ksTest.areGeneralizable(values.get(0), values.get(1));
+			
+			return new ResponseEntity<String>(String.format("%s: %b", ksTest.getAlgorithm(), areGeneralizable), HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("This algorithm needs two different list of values", HttpStatus.BAD_REQUEST);
 		}
 	}
 	
