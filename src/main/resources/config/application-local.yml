@@ -5,5 +5,4 @@ rJavaServer:
     rexe: /Library/Frameworks/R.framework/Versions/3.2/Resources/bin/exec/R
     enableJRI: false
   metrics:
-    enabled: false
     period: 10

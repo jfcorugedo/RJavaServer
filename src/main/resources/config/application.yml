@@ -1,6 +1,8 @@
 endpoints:
-  shutdown: enabled=true
-  beans: sensitive:false
+  shutdown: 
+    enabled: true
+  beans: 
+    sensitive: true
 server:
     port: 8080
 rJavaServer:
@@ -8,9 +10,7 @@ rJavaServer:
     blockFunction: source("/app/blockFunction.R")
     rserveConf: /app/rserve.conf
     rexe: /app/vendor/R/lib/R/bin/R
-    enableJRI: false
   metrics:
     apiKey: cf72a3a58261d378f033fb6b842a8601
     host: rJavaServer.dev
     period: 20
-    enabled: true

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.codahale.metrics.MetricRegistry;
 
@@ -25,6 +26,7 @@ import com.codahale.metrics.MetricRegistry;
  */
 @Configuration
 @ConfigurationProperties("rJavaServer.metrics")
+@Profile({ "!local"})
 public class DatadogReporterConfig {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DatadogReporterConfig.class);
@@ -38,26 +40,9 @@ public class DatadogReporterConfig {
 	/** Time, in seconds, between every call to Datadog API. The lower this value the more information will be send to Datadog */
 	private long period;
 	
-	/** This flag enables or disables the datadog reporter */
-	private boolean enabled = false;
-	
 	@Bean
 	@Autowired
 	public DatadogReporter datadogReporter(MetricRegistry registry) {
-		
-		DatadogReporter reporter = null;
-		if(enabled) {
-			reporter = enableDatadogMetrics(registry);
-		} else {
-			if(LOGGER.isWarnEnabled()) {
-				LOGGER.info("Datadog reporter is disabled. To turn on this feature just set 'rJavaServer.metrics.enabled:true' in your config file (property or YAML)");
-			}
-		}
-		
-		return reporter;
-	}
-
-	private DatadogReporter enableDatadogMetrics(MetricRegistry registry) {
 		
 		if(LOGGER.isInfoEnabled()) {
 			LOGGER.info("Initializing Datadog reporter using [ host: {}, period(seconds):{}, api-key:{} ]", getHost(), getPeriod(), getApiKey());
@@ -124,22 +109,6 @@ public class DatadogReporterConfig {
 	 */
 	public void setPeriod(long period) {
 		this.period = period;
-	}
-
-	/**
-	 * @return true if DatadogReporter is enabled in this application
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	/**
-	 * This flag enables or disables the datadog reporter.
-	 * This flag is only read during initialization, subsequent changes on this value will no take effect 
-	 * @param enabled
-	 */
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
 	}
 }
 
