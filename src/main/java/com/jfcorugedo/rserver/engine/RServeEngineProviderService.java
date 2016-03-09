@@ -55,10 +55,12 @@ public class RServeEngineProviderService implements REngineProviderService {
 			
 			shutdownPreviousRuningInstances();
 			
+			String command = String.format("echo 'library(Rserve);Rserve(FALSE,args=\"--no-save --slave --RS-conf %s\")'|%s --no-save --slave", rserveConf, rexe);
+			
 	        if(LOGGER.isInfoEnabled()) {
-	        	LOGGER.info("Starting RServe process...");
+	        	LOGGER.info("Starting RServe process using this command:\n{}", command);
 	        }
-			ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", String.format("echo 'library(Rserve);Rserve(FALSE,args=\"--no-save --slave --RS-conf %s\")'|%s --no-save --slave", rserveConf, rexe));
+			ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", command);
 	    	builder.inheritIO();
 	    	Process rProcess = builder.start();
 	        
