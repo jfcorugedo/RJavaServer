@@ -1,5 +1,6 @@
 package com.jfcorugedo.rserver;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -34,11 +35,11 @@ public class Application {
      * Set a default profile if it has not been set
      */
     private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
-        if (!source.containsProperty("spring.profiles.active")) {
+        if (!source.containsProperty("spring.profiles.active") || StringUtils.isNotBlank(System.getenv("SPRING_PROFILES_ACTIVE"))) {
             app.setAdditionalProfiles("local");
             LOGGER.info("Staring application with profiles: local");
         } else {
-            LOGGER.info("Staring application with profiles: {}", source.containsProperty("spring.profiles.active"));
+            LOGGER.info("Staring application with profiles: {} and {}", source.getProperty("spring.profiles.active"), StringUtils.isNotBlank(System.getenv("SPRING_PROFILES_ACTIVE")));
         }
     }
     
