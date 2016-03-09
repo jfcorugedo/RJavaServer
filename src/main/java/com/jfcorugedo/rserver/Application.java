@@ -35,11 +35,11 @@ public class Application {
      * Set a default profile if it has not been set
      */
     private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
-        if (!source.containsProperty("spring.profiles.active") || StringUtils.isNotBlank(System.getenv("SPRING_PROFILES_ACTIVE"))) {
+        if (!source.containsProperty("spring.profiles.active")) {
             app.setAdditionalProfiles("local");
             LOGGER.info("Staring application with profiles: local");
         } else {
-            LOGGER.info("Staring application with profiles: {} and {}", source.getProperty("spring.profiles.active"), StringUtils.isNotBlank(System.getenv("SPRING_PROFILES_ACTIVE")));
+            LOGGER.info("Staring application with profiles: {}", source.getProperty("spring.profiles.active"));
         }
     }
     
