@@ -15,7 +15,7 @@ public class Application {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 	
 	public static void main(String[] args) {
-        LOGGER.debug("\n****************\n* rJava Server *\n****************\n");
+        LOGGER.info("\n****************\n* rJava Server *\n****************\n");
         
         SpringApplication app = new SpringApplication(Application.class);
         app.setShowBanner(false);
@@ -24,6 +24,8 @@ public class Application {
         // Check if the selected profile has been set as argument.
         // if not the development profile will be added
         addDefaultProfile(app, source);
+        
+        
         
         app.run(args);
     }
@@ -34,6 +36,9 @@ public class Application {
     private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
         if (!source.containsProperty("spring.profiles.active")) {
             app.setAdditionalProfiles("local");
+            LOGGER.info("Staring application with profiles: local");
+        } else {
+            LOGGER.info("Staring application with profiles: {}", source.containsProperty("spring.profiles.active"));
         }
     }
     
