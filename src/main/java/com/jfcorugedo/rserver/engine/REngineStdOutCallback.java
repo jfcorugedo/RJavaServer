@@ -12,6 +12,7 @@ public class REngineStdOutCallback implements REngineCallbacks, REngineOutputInt
 	public REngineStdOutCallback(Logger logger) {
 		this.logger = logger;
 	}
+	
 	@Override
 	public void RWriteConsole(REngine eng, String text, int oType) {//NOSONAR
 		if(oType == 0) {

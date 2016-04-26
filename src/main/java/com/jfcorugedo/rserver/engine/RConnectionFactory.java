@@ -17,10 +17,8 @@ public class RConnectionFactory {
 	}
 	
 	public void releaseConnection(REngine engine) {
-		if(engine != null) {
-			if(!engine.close()) {
-				LOGGER.warn("Unexpected error closing RServe connection");
-			}
+		if(engine != null && !engine.close()) {
+			LOGGER.warn("Unexpected error closing RServe connection");
 		}
 	}
 }

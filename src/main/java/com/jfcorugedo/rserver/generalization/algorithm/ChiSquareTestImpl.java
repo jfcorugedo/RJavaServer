@@ -22,10 +22,8 @@ public class ChiSquareTestImpl implements ChiSquareTest {
 			throw new DimensionMismatchException(format("Observed samples have different dimension: %d != %d", observed1.length, observed2.length));
 		}
 		
-		if(isBinary(observed1, observed2)) {
-			if(observed1[0] == 0 || observed1[1] == 0){
-				return true;
-			}
+		if(isBinary(observed1, observed2) && (observed1[0] == 0 || observed1[1] == 0)){
+			return true;
 		}
 		
 		return !chiTest.chiSquareTestDataSetsComparison(observed1, observed2, DEFAULT_CONFIDENCE_LEVEL);
@@ -58,7 +56,7 @@ public class ChiSquareTestImpl implements ChiSquareTest {
 	 */
 	private boolean isBinary(long[] observed1, long[] observed2) {
 		
-		return observed1.length == 2;
+		return observed1.length == 2 && observed2.length == 2;
 	}
 
 	@Override

@@ -151,7 +151,7 @@ public class RServeEngineProviderService implements REngineProviderService {
 		for(int i = 0 ; i < discreteValues.size() ; i++) {
 			data.add(discreteValues.get(i));
 			discreteVariables.append(format("\"discreteValues%d\",", i));
-			data.setKeyAt(i+1, format("discreteValues", i));
+			data.setKeyAt(i+1, format("discreteValues%d", i));
 		}
 		
 		StringBuilder continuousVariables = new StringBuilder();

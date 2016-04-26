@@ -14,7 +14,7 @@ public final class CollectionUtils {
 	}
 	
 	public static <T> List<T> arrayToList(T[] array){
-		return Arrays.stream(array).collect(Collectors.toList());
+		return Arrays.stream(array).collect(Collectors.toList());//NOSONAR: This stream doesn't need to be closed
 	}
 
 	/**
@@ -24,11 +24,11 @@ public final class CollectionUtils {
 	 * @return
 	 */
 	public static boolean isEmpty(Map<? extends Object, ? extends Object> map) {
-		return (map == null || map.size() == 0);
+		return map == null || map.isEmpty();
 	}
 	
 	public static boolean isEmpty(List<? extends Object> list) {
-		return (list == null || list.size() == 0);
+		return list == null || list.isEmpty();
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public final class CollectionUtils {
 	}
 	
 	public static boolean isNotEmpty(Collection<? extends Object> collection) {
-		return (collection != null && collection.size() > 0);
+		return collection != null && !collection.isEmpty();
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public final class CollectionUtils {
 	 */
 	@SafeVarargs
 	public static <T> List<T> newList(T... values) {
-		List<T> arrayList = new ArrayList<T>(values.length);
+		List<T> arrayList = new ArrayList<>(values.length);
 		for(T element : values) {
 			arrayList.add(element);
 		}

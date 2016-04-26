@@ -86,7 +86,7 @@ public class RServiceImpl implements RService{
 		Integer[] unit1 = getNumbers((REXP)vector.asList().get(0));
 		Integer[] unit2 = getNumbers((REXP)vector.asList().get(1));
 		
-		List<int[]> resultFormated = new ArrayList<int[]>(unit1.length);
+		List<int[]> resultFormated = new ArrayList<>(unit1.length);
 		for(int index = 0 ; index < unit2.length -1 ; index++) {
 			resultFormated.add(new int[]{unit1[index], unit2[index]});
 		}
@@ -99,9 +99,9 @@ public class RServiceImpl implements RService{
 		return resultFormated;
 	}
 
-	private Integer[] getNumbers(REXP ids) throws NumberFormatException {
+	private Integer[] getNumbers(REXP ids) {
 		if(ids.isString()) {
-			return Arrays.stream(((REXPString)ids).asStrings())
+			return Arrays.stream(((REXPString)ids).asStrings())//NOSONAR: This stream doesn't need to be closed
 						.map(
 								id -> {
 									if(id != null) {
@@ -113,12 +113,12 @@ public class RServiceImpl implements RService{
 						).toArray(Integer[]::new);
 		} else {
 			int[] idsAsArray = ((REXPInteger)ids).asIntegers();
-			return (Integer[])Arrays.stream(idsAsArray).boxed().toArray(Integer[]::new);
+			return (Integer[])Arrays.stream(idsAsArray).boxed().toArray(Integer[]::new);//NOSONAR: This stream doesn't need to be closed
 		}
 	}
 
 	private int[] generateIds(int length) {
-		return IntStream.range(0, length).toArray();
+		return IntStream.range(0, length).toArray();//NOSONAR: This stream doesn't need to be closed
 	}
 
 	private String blockResultToString(REXP result) {
