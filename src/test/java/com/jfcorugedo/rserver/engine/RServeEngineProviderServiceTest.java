@@ -206,4 +206,24 @@ public class RServeEngineProviderServiceTest {
 		
 		rServeEngineProviderService.sqrt(4.0);
 	}
+	
+	@Test
+	public void shutdownPreviousRuningInstancesTriesToShutdownAndCloseConnection() throws Exception{
+	    
+	    RConnection rConnectionMock = mock(RConnection.class);
+	    when(rConnectionFactory.getConnection()).thenReturn(rConnectionMock);
+	    
+	    rServeEngineProviderService.shutdownPreviousRuningInstances();
+	    
+	    verify(rConnectionMock, times(1)).shutdown();
+	    verify(rConnectionFactory, times(1)).releaseConnection(rConnectionMock);
+	}
+	
+	@Test
+	public void shutdownPreviousRuningInstancesDoesNotPropagateAnyException() throws Exception{
+	    
+	    when(rConnectionFactory.getConnection()).thenThrow(new RuntimeException("Test expception"));
+	    
+	    rServeEngineProviderService.shutdownPreviousRuningInstances();
+	}
 }

@@ -1,5 +1,6 @@
 package com.jfcorugedo.rserver.engine;
 
+import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -89,4 +90,10 @@ public class JRIEngineProviderServiceTest {
 		
 		service.ksTest(mock(REXPDouble.class), mock(REXPDouble.class));
 	}
+	
+	@Test(expected=UnsupportedOperationException.class)
+    public void blockGeneralFunctionIsNotImplementedYet() {
+        
+        service.blockGeneralFunction(mock(REXPInteger.class), newList(), newList());
+    }
 }

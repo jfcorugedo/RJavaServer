@@ -90,7 +90,7 @@ public class RServeEngineProviderService implements REngineProviderService {
 		}
 	}
 	
-	private void shutdownPreviousRuningInstances() {
+	protected void shutdownPreviousRuningInstances() {
 		if(LOGGER.isInfoEnabled()) {
 			LOGGER.info("Cleaning old Rserve running instances...");
 		}
