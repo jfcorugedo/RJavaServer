@@ -1,8 +1,11 @@
 package com.jfcorugedo.rserver.service;
 
-import static org.mockito.Mockito.*;
+import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.jfcorugedo.rserver.exception.BadRequestException;
 import com.jfcorugedo.rserver.generalization.algorithm.KolmogorovSmirnovTest;
-
-import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
 
 public class RControllerTest {
 	

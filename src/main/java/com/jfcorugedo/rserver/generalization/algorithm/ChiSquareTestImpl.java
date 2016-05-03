@@ -1,11 +1,11 @@
 package com.jfcorugedo.rserver.generalization.algorithm;
 
+import static java.lang.String.format;
+
 import org.springframework.stereotype.Component;
 
 import com.codahale.metrics.annotation.Timed;
 import com.jfcorugedo.rserver.exception.DimensionMismatchException;
-
-import static java.lang.String.format;
 
 @Component
 public class ChiSquareTestImpl implements ChiSquareTest {

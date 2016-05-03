@@ -1,5 +1,7 @@
 package com.jfcorugedo.rserver.engine;
 
+import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -15,7 +17,6 @@ import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.jfcorugedo.rserver.common.collection.CollectionUtils.*;
 
 @Ignore("These tests require R environment installed")
 public class JRIEngineProviderServiceIT {

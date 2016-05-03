@@ -1,7 +1,7 @@
 package com.jfcorugedo.rserver.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static com.jfcorugedo.rserver.common.collection.CollectionUtils.newList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;
 
