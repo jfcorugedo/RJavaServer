@@ -222,7 +222,7 @@
 								<exclude>**/*Test</exclude>
 							</excludes>
 							<includes>
-								<include>com.vectorsf.*</include>
+								<include>com.jfcorugedo.*</include>
 							</includes>
 							<propertyName>jacoco.argLine</propertyName>
 						</configuration>
@@ -248,7 +248,7 @@
 								<exclude>**/*IT</exclude>
 							</excludes>
 							<includes>
-								<include>com.vectorsf.*</include>
+								<include>com.jfcorugedo.*</include>
 							</includes>
 							<propertyName>jacoco.it.argLine</propertyName>
 						</configuration>
